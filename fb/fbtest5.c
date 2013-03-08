@@ -1,3 +1,19 @@
+/*
+ * fbtest5.c
+ *
+ * http://raspberrycompote.blogspot.ie/2013/03/low-level-graphics-on-raspberry-pi-part_7.html
+ *
+ * Original work by J-P Rosti (a.k.a -rst- and 'Raspberry Compote')
+ *
+ * Licensed under the Creative Commons Attribution 3.0 Unported License
+ * (http://creativecommons.org/licenses/by/3.0/deed.en_US)
+ *
+ * Distributed in the hope that this will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ */
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
