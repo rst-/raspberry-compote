@@ -1,7 +1,7 @@
 /*
  * fbtest7.c
  *
- * http://raspberrycompote.blogspot.ie/2013/03/low-level-graphics-on-raspberry-pi-part_8.html
+ * http://raspberrycompote.blogspot.ie/2013/04/low-level-graphics-on-raspberry-pi-part.html
  *
  * Original work by J-P Rosti (a.k.a -rst- and 'Raspberry Compote')
  *
