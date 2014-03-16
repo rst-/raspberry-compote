@@ -49,6 +49,7 @@ static struct timespec timediff(struct timespec start, struct timespec end) {
   return temp;
 }
 
+// helper function to talk to the mailbox interface
 static int mbox_property(void *buf)
 {
    if (mboxfd < -1) return -1;
@@ -62,6 +63,7 @@ static int mbox_property(void *buf)
    return ret_val;
 }
 
+// helper function to set the framebuffer virtual offset == pan
 static unsigned set_fb_voffs(unsigned *x, unsigned *y)
 {
    int i=0;
