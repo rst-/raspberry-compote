@@ -71,7 +71,7 @@ static unsigned set_fb_voffs(unsigned *x, unsigned *y)
    p[i++] = 0; // size
    p[i++] = 0x00000000; // process request
 
-   p[i++] = 0x00048009; // get physical (display) width/height
+   p[i++] = 0x00048009; // set virtual offset
    p[i++] = 0x00000008; // buffer size
    p[i++] = 0x00000000; // request size
    p[i++] = *x; // value buffer
