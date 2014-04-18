@@ -87,7 +87,7 @@ void draw(char *arg) {
                     put_pixel(textX + i * FONTW + x, textY + y, textC);
                 }
                 else { 
-                    // leave empty
+                    // leave empty (or maybe plot 'text backgr color')
                 }
             } // end "for x"
         } // end "for y"
