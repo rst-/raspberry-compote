@@ -1,7 +1,7 @@
 /*
  * fbtestfnt.c
  *
- * 
+ * http://raspberrycompote.blogspot.com/2014/04/low-level-graphics-on-raspberry-pi-text.html 
  *
  * Original work by J-P Rosti (a.k.a -rst- and 'Raspberry Compote')
  *
