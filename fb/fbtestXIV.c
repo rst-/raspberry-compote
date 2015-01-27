@@ -2,7 +2,6 @@
  * fbtestXIV.c
  *
  * compile with 'gcc -O2 -o fbtestXIV fbtestXIV.c'
- * (!) issue command 'fbset -depth 8' before running to prevent display from blanking
  * run with './fbtestXIV'
  *
  * Original work by J-P Rosti (a.k.a -rst- and 'Raspberry Compote')
@@ -165,16 +164,6 @@ int main(int argc, char* argv[])
       return(1);
     }
 
-    // hide cursor
-    char *kbfds = "/dev/tty";
-    int kbfd = open(kbfds, O_WRONLY);
-    if (kbfd >= 0) {
-        ioctl(kbfd, KDSETMODE, KD_GRAPHICS);
-    }
-    else {
-        printf("Could not open %s.\n", kbfds);
-    }
-
     // Get variable screen information
     if (ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo)) {
       printf("Error reading variable information.\n");
@@ -191,6 +180,16 @@ int main(int argc, char* argv[])
     vinfo.yres_virtual = vinfo.yres * 2;
     if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &vinfo)) {
       printf("Error setting variable information.\n");
+    }
+
+    // hide cursor
+    char *kbfds = "/dev/tty";
+    int kbfd = open(kbfds, O_WRONLY);
+    if (kbfd >= 0) {
+        ioctl(kbfd, KDSETMODE, KD_GRAPHICS);
+    }
+    else {
+        printf("Could not open %s.\n", kbfds);
     }
 
     // Get fixed screen information
@@ -221,15 +220,15 @@ int main(int argc, char* argv[])
     // cleanup
     munmap(fbp, screensize);
 
+    if (kbfd >= 0) {
+        ioctl(kbfd, KDSETMODE, KD_TEXT);
+    }
+
     if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo)) {
         printf("Error re-setting variable information.\n");
     }
     close(fbfd);
 
-    // reset cursor
-    if (kbfd >= 0) {
-        ioctl(kbfd, KDSETMODE, KD_TEXT);
-    }
 
     return 0;
 
