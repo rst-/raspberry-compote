@@ -4,4 +4,4 @@ http://raspberrycompote.blogspot.ie/2012/12/low-level-graphics-on-raspberry-pi-p
 
 LICENSE see https://github.com/rst-/raspberry-compote
 
-Update 2015-01-16: It appears that latest Raspbian builds require forcing the framebuffer mode to 8-bit colors running the command 'fbset -depth 8' before running the examples where 8-bit mode is set. Later the mode can be freely set and the examples run fine...
+Update 2015-01-27: It appears that blank screen on latest Raspbian builds was/is caused by setting the cursor mode before vinfo change - I have updated fbtestXIV.c to fix this and will update the rest as soon as I get the chance.
