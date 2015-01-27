@@ -1,7 +1,7 @@
 /*
  * fbtestXII.c
  *
- * 
+ * http://raspberrycompote.blogspot.ie/2014/03/low-level-graphics-on-raspberry-pi-part_16.html
  *
  * Original work by J-P Rosti (a.k.a -rst- and 'Raspberry Compote')
  *
@@ -197,7 +197,7 @@ int main(int argc, char* argv[])
 
     // Open the framebuffer file for reading and writing
     fbfd = open("/dev/fb0", O_RDWR);
-    if (!fbfd) {
+    if (fbfd == -1) {
       printf("Error: cannot open framebuffer device.\n");
       return(1);
     }
@@ -270,16 +270,20 @@ int main(int argc, char* argv[])
     }
 
     // cleanup
+    // unmap fb file from memory
     munmap(fbp, screensize);
-    if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo)) {
-        printf("Error re-setting variable information.\n");
-    }
-    close(fbfd);
-
     // reset cursor
     if (kbfd >= 0) {
         ioctl(kbfd, KDSETMODE, KD_TEXT);
+        // close kb file
+        close(kbfd);
     }
+    // reset the display mode
+    if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo)) {
+        printf("Error re-setting variable information.\n");
+    }
+    // close fb file    
+    close(fbfd);
 
     return 0;
   

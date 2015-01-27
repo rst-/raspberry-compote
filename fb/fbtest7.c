@@ -35,9 +35,9 @@ void put_pixel_RGB24(int x, int y, int r, int g, int b)
     unsigned int pix_offset = x * 3 + y * finfo.line_length;
 
     // now this is about the same as 'fbp[pix_offset] = value'
-    *((char*)(fbp + pix_offset)) = r;
+    *((char*)(fbp + pix_offset)) = b;
     *((char*)(fbp + pix_offset + 1)) = g;
-    *((char*)(fbp + pix_offset + 2)) = b;
+    *((char*)(fbp + pix_offset + 2)) = r;
 
 }
 
@@ -101,15 +101,15 @@ int main(int argc, char* argv[])
 
     // Open the file for reading and writing
     fbfd = open("/dev/fb0", O_RDWR);
-    if (!fbfd) {
-      printf("Error: cannot open framebuffer device.\n");
-      return(1);
+    if (fbfd == -1) {
+        printf("Error: cannot open framebuffer device.\n");
+        return(1);
     }
     printf("The framebuffer device was opened successfully.\n");
 
     // Get variable screen information
     if (ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo)) {
-      printf("Error reading variable information.\n");
+        printf("Error reading variable information.\n");
     }
     printf("Original %dx%d, %dbpp\n", vinfo.xres, vinfo.yres, 
        vinfo.bits_per_pixel );
@@ -119,11 +119,11 @@ int main(int argc, char* argv[])
 
     // Get fixed screen information
     if (ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo)) {
-      printf("Error reading fixed information.\n");
+        printf("Error reading fixed information.\n");
     }
 
     // map fb to user mem 
-    screensize = vinfo.xres * vinfo.yres * vinfo.bits_per_pixel / 8;
+    screensize = finfo.smem_len;
     fbp = (char*)mmap(0, 
               screensize, 
               PROT_READ | PROT_WRITE, 
@@ -141,10 +141,13 @@ int main(int argc, char* argv[])
     }
 
     // cleanup
+    // unmap fb file from memory
     munmap(fbp, screensize);
+    // reset the display mode
     if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo)) {
         printf("Error re-setting variable information.\n");
     }
+    // close fb file    
     close(fbfd);
 
     return 0;

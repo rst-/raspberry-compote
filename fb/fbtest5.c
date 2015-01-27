@@ -24,22 +24,22 @@
 
 // default framebuffer palette
 typedef enum {
-  BLACK        =  0, /*   0,   0,   0 */
-  BLUE         =  1, /*   0,   0, 172 */
-  GREEN        =  2, /*   0, 172,   0 */
-  CYAN         =  3, /*   0, 172, 172 */
-  RED          =  4, /* 172,   0,   0 */
-  PURPLE       =  5, /* 172,   0, 172 */
-  ORANGE       =  6, /* 172,  84,   0 */
-  LTGREY       =  7, /* 172, 172, 172 */
-  GREY         =  8, /*  84,  84,  84 */
-  LIGHT_BLUE   =  9, /*  84,  84, 255 */
-  LIGHT_GREEN  = 10, /*  84, 255,  84 */
-  LIGHT_CYAN   = 11, /*  84, 255, 255 */
-  LIGHT_RED    = 12, /* 255,  84,  84 */
-  LIGHT_PURPLE = 13, /* 255,  84, 255 */
-  YELLOW       = 14, /* 255, 255,  84 */
-  WHITE        = 15  /* 255, 255, 255 */
+    BLACK        =  0, /*   0,   0,   0 */
+    BLUE         =  1, /*   0,   0, 172 */
+    GREEN        =  2, /*   0, 172,   0 */
+    CYAN         =  3, /*   0, 172, 172 */
+    RED          =  4, /* 172,   0,   0 */
+    PURPLE       =  5, /* 172,   0, 172 */
+    ORANGE       =  6, /* 172,  84,   0 */
+    LTGREY       =  7, /* 172, 172, 172 */
+    GREY         =  8, /*  84,  84,  84 */
+    LIGHT_BLUE   =  9, /*  84,  84, 255 */
+    LIGHT_GREEN  = 10, /*  84, 255,  84 */
+    LIGHT_CYAN   = 11, /*  84, 255, 255 */
+    LIGHT_RED    = 12, /* 255,  84,  84 */
+    LIGHT_PURPLE = 13, /* 255,  84, 255 */
+    YELLOW       = 14, /* 255, 255,  84 */
+    WHITE        = 15  /* 255, 255, 255 */
 } COLOR_INDEX_T;
 
 static unsigned short def_r[] = 
@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
 
     // Open the file for reading and writing
     fbfd = open("/dev/fb0", O_RDWR);
-    if (!fbfd) {
+    if (fbfd == -1) {
       printf("Error: cannot open framebuffer device.\n");
       return(1);
     }
@@ -175,10 +175,13 @@ int main(int argc, char* argv[])
     }
 
     // cleanup
+    // unmap fb file from memory
     munmap(fbp, screensize);
+    // reset the display mode
     if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo)) {
         printf("Error re-setting variable information.\n");
     }
+    // close fb file    
     close(fbfd);
 
     return 0;

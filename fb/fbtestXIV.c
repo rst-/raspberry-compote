@@ -4,6 +4,9 @@
  * compile with 'gcc -O2 -o fbtestXIV fbtestXIV.c'
  * run with './fbtestXIV'
  *
+ * http://raspberrycompote.blogspot.ie/2015/01/low-level-graphics-on-raspberry-pi-part.html
+ * http://raspberrycompote.blogspot.ie/2015/01/low-level-graphics-on-raspberry-pi-part_27.html
+ *
  * Original work by J-P Rosti (a.k.a -rst- and 'Raspberry Compote')
  *
  * Licensed under the Creative Commons Attribution 3.0 Unported License
@@ -159,7 +162,7 @@ int main(int argc, char* argv[])
 
     // Open the framebuffer file for reading and writing
     fbfd = open("/dev/fb0", O_RDWR);
-    if (!fbfd) {
+    if (fbfd == -1) {
       printf("Error: cannot open framebuffer device.\n");
       return(1);
     }
@@ -217,18 +220,20 @@ int main(int argc, char* argv[])
         //sleep(5);
     }
 
-    // cleanup
+    // unmap fb file from memory
     munmap(fbp, screensize);
-
+    // reset cursor
     if (kbfd >= 0) {
         ioctl(kbfd, KDSETMODE, KD_TEXT);
+        // close kb file
+        close(kbfd);
     }
-
+    // reset the display mode
     if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo)) {
         printf("Error re-setting variable information.\n");
     }
+    // close fb file    
     close(fbfd);
-
 
     return 0;
 

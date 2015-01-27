@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 
     // Open the file for reading and writing
     fbfd = open("/dev/fb0", O_RDWR);
-    if (!fbfd) {
+    if (fbfd == -1) {
       printf("Error: cannot open framebuffer device.\n");
       return(1);
     }
@@ -44,10 +44,11 @@ int main(int argc, char* argv[])
 
     // Get variable screen information
     if (ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo)) {
-      printf("Error reading variable information.\n");
+        printf("Error reading variable information.\n");
     }
-    printf("Original %dx%d, %dbpp\n", vinfo.xres, vinfo.yres, 
-	   vinfo.bits_per_pixel );
+    printf("Original %dx%d, %dbpp\n", 
+            vinfo.xres, vinfo.yres, 
+            vinfo.bits_per_pixel );
 
     // Store for reset (copy vinfo to vinfo_orig)
     memcpy(&orig_vinfo, &vinfo, sizeof(struct fb_var_screeninfo));
@@ -55,54 +56,57 @@ int main(int argc, char* argv[])
     // Change variable info
     vinfo.bits_per_pixel = 8;
     if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &vinfo)) {
-      printf("Error setting variable information.\n");
+        printf("Error setting variable information.\n");
     }
 
     // Get fixed screen information
     if (ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo)) {
-      printf("Error reading fixed information.\n");
+        printf("Error reading fixed information.\n");
     }
 
     // map fb to user mem 
-    screensize = finfo.smem_len; //vinfo.xres * vinfo.yres;
+    screensize = finfo.smem_len;
     fbp = (char*)mmap(0, 
-		      screensize, 
-		      PROT_READ | PROT_WRITE, 
-		      MAP_SHARED, 
-		      fbfd, 
-		      0);
+              screensize, 
+              PROT_READ | PROT_WRITE, 
+              MAP_SHARED, 
+              fbfd, 
+              0);
 
     if ((int)fbp == -1) {
-      printf("Failed to mmap.\n");
+        printf("Failed to mmap.\n");
     }
     else {
-      // draw...
-      int x, y;
-      unsigned int pix_offset;
+        // draw...
+        int x, y;
+        unsigned int pix_offset;
 
-      for (y = 0; y < (vinfo.yres / 2); y++) {
-	for (x = 0; x < vinfo.xres; x++) {
+        for (y = 0; y < (vinfo.yres / 2); y++) {
+            for (x = 0; x < vinfo.xres; x++) {
 
-	  // calculate the pixel's byte offset inside the buffer
-	  // see the image above in the blog...
-	  pix_offset = x + y * finfo.line_length;
+                // calculate the pixel's byte offset inside the buffer
+                // see the image above in the blog...
+                pix_offset = x + y * finfo.line_length;
 
-	  // now this is about the same as fbp[pix_offset] = value
-	  *((char*)(fbp + pix_offset)) = 16 * x / vinfo.xres;
+                // now this is about the same as fbp[pix_offset] = value
+                *((char*)(fbp + pix_offset)) = 16 * x / vinfo.xres;
 
-	}
-      }
+            }
+        }
 
-      sleep(5);
+        sleep(5);
     }
 
     // cleanup
+    // unmap fb file from memory
     munmap(fbp, screensize);
+    // reset the display mode
     if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo)) {
-      printf("Error re-setting variable information.\n");
+        printf("Error re-setting variable information.\n");
     }
+    // close fb file    
     close(fbfd);
 
     return 0;
   
-  }
+}

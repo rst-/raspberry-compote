@@ -77,16 +77,6 @@ int main(int argc, char* argv[])
     }
     //printf("The framebuffer device opened.\n");
 
-    // hide cursor
-    char *kbfds = "/dev/tty";
-    int kbfd = open(kbfds, O_WRONLY);
-    if (kbfd >= 0) {
-        ioctl(kbfd, KDSETMODE, KD_GRAPHICS);
-    }
-    else {
-        printf("Could not open %s.\n", kbfds);
-    }
-
     // Get original variable screen information
     if (ioctl(fbfd, FBIOGET_VSCREENINFO, &var_info)) {
         printf("Error reading variable screen info.\n");
@@ -111,6 +101,16 @@ int main(int argc, char* argv[])
     // Get fixed screen information
     if (ioctl(fbfd, FBIOGET_FSCREENINFO, &fix_info)) {
         printf("Error reading fixed screen info.\n");
+    }
+
+    // hide cursor
+    char *kbfds = "/dev/tty";
+    int kbfd = open(kbfds, O_WRONLY);
+    if (kbfd >= 0) {
+        ioctl(kbfd, KDSETMODE, KD_GRAPHICS);
+    }
+    else {
+        printf("Could not open %s.\n", kbfds);
     }
 
     // Create palette
@@ -203,7 +203,7 @@ int main(int argc, char* argv[])
     }
 
     // Cleanup
-    // unmap the file from memory
+    // unmap fb file from memory
     munmap(fbp, screensize);
     // reset palette
     palette.start = 0;
@@ -215,16 +215,17 @@ int main(int argc, char* argv[])
     if (ioctl(fbfd, FBIOPUTCMAP, &palette)) {
         printf("Error setting palette.\n");
     }
-    // reset the display mode
-    if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_var_info)) {
-        printf("Error re-setting variable screen info.\n");
-    }
-    // close file  
-    close(fbfd);
     // reset cursor
     if (kbfd >= 0) {
         ioctl(kbfd, KDSETMODE, KD_TEXT);
     }
+    // reset the display mode
+    if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_var_info)) {
+        printf("Error re-setting variable screen info.\n");
+    }
+    // close fb file  
+    close(fbfd);
 
     return 0;
+    
 }

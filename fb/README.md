@@ -4,4 +4,4 @@ http://raspberrycompote.blogspot.ie/2012/12/low-level-graphics-on-raspberry-pi-p
 
 LICENSE see https://github.com/rst-/raspberry-compote
 
-Update 2015-01-27: It appears that blank screen on latest Raspbian builds was/is caused by setting the cursor mode before vinfo change - I have updated fbtestXIV.c to fix this and will update the rest as soon as I get the chance.
+Update 2015-01-27: It appears that blank screen on latest Raspbian builds was/is caused by setting the cursor mode before vinfo change.
