@@ -154,6 +154,7 @@ void draw() {
         // ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
         ioctl(fbfd, FBIO_WAITFORVSYNC, 0);
 
+        // also should of course check the return values of the ioctl calls...
     }
 
 }
