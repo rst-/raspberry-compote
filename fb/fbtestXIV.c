@@ -4,8 +4,8 @@
  * compile with 'gcc -O2 -o fbtestXIV fbtestXIV.c'
  * run with './fbtestXIV'
  *
- * http://raspberrycompote.blogspot.ie/2015/01/low-level-graphics-on-raspberry-pi-part.html
- * http://raspberrycompote.blogspot.ie/2015/01/low-level-graphics-on-raspberry-pi-part_27.html
+ * http://raspberrycompote.blogspot.com/2015/01/low-level-graphics-on-raspberry-pi-part.html
+ * http://raspberrycompote.blogspot.com/2015/01/low-level-graphics-on-raspberry-pi-part_27.html
  *
  * Original work by J-P Rosti (a.k.a -rst- and 'Raspberry Compote')
  *
@@ -147,6 +147,11 @@ void draw() {
         // switch page
         vinfo.yoffset = cur_page * vinfo.yres;
         ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
+        // the call to waitforvsync should probably use a pointer to a variable
+        // https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
+        // so should likely be (not tested yet):
+        // u32 dummy = 0;
+        // ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
         ioctl(fbfd, FBIO_WAITFORVSYNC, 0);
 
     }
