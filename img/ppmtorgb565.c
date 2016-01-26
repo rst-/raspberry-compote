@@ -7,7 +7,8 @@
  *   gcc -O2 -o ppmtorgb565 ppmtorgb565.c
  *
  * Usage:
- *   - make sure you have a 24 bit PNG to begin with
+ *   - make sure you have a 24 bit PNG to begin with and the image pixel dimensions
+ *     match your target
  *   (- sudo apt-get install netpbm)
  *   - pngtopnm /path/to/image24.png | /path/to/ppmtorgb565 > /path/to/image565.raw
  * Maybe even:
