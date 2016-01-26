@@ -3,6 +3,17 @@
  *
  * Converts a 24 bit P6 PPM file to 'raw' RGB 16 bit 5:6:5 format
  *
+ * To build:
+ *   gcc -O2 -o ppmtorgb565 ppmtorgb565.c
+ *
+ * Usage:
+ *   - make sure you have a 24 bit PNG to begin with
+ *   (- sudo apt-get install netpbm)
+ *   - pngtopnm /path/to/image24.png | /path/to/ppmtorgb565 > /path/to/image565.raw
+ * Maybe even:
+ *   - pngtopnm /path/to/image24.png | /path/to/ppmtorgb565 > /dev/fb1
+ *
+ *
  * Original work by J-P Rosti (a.k.a -rst- and 'Raspberry Compote')
  *
  * Licensed under the Creative Commons Attribution 3.0 Unported License
