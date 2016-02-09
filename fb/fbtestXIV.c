@@ -149,10 +149,9 @@ void draw() {
         ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
         // the call to waitforvsync should use a pointer to a variable
         // https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
-        // so should likely be (not tested yet):
+        // so should be in fact like this:
         __u32 dummy = 0;
         ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
-        //ioctl(fbfd, FBIO_WAITFORVSYNC, 0);
 
         // also should of course check the return values of the ioctl calls...
     }
