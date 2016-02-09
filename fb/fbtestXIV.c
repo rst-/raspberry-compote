@@ -147,12 +147,12 @@ void draw() {
         // switch page
         vinfo.yoffset = cur_page * vinfo.yres;
         ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
-        // the call to waitforvsync should probably use a pointer to a variable
+        // the call to waitforvsync should use a pointer to a variable
         // https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
         // so should likely be (not tested yet):
-        // u32 dummy = 0;
-        // ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
-        ioctl(fbfd, FBIO_WAITFORVSYNC, 0);
+        __u32 dummy = 0;
+        ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+        //ioctl(fbfd, FBIO_WAITFORVSYNC, 0);
 
         // also should of course check the return values of the ioctl calls...
     }
