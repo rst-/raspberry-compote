@@ -1,7 +1,7 @@
 /*
  * fbtest5z.c
  *
- * http://raspberrycompote.blogspot.ie/2016/02/low-level-graphics-on-raspberry-pi-even.html
+ * http://raspberrycompote.blogspot.com/2016/02/low-level-graphics-on-raspberry-pi-even.html
  *
  * Compile with 'gcc -o fbtest5z fbtest5z.c'
  * Run with './fbtest5y'
