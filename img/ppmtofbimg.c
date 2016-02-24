@@ -4,6 +4,18 @@
  * Converts a 24 bit P6 PPM file to 'raw' RGB 16 bit 5:6:5 format
  * and draws into framebuffer
  *
+ * http://raspberrycompote.blogspot.com/2016/02/low-level-graphics-on-raspberry-pi-more_24.html
+ *
+ * To build:
+ *   gcc -O2 -o ppmtofbimg ppmtofbimg.c
+ *
+ * Usage:
+ *   - make sure you have a 24 bit PPM to begin with and the image
+ *     (pixel dimensions) is smaller than the screen (see test24.ppm)
+ *   - to run
+ *        ./ppmtofbimg test24.ppm
+ *   - draws the given image to the upper left corner of screen
+ *
  * Original work by J-P Rosti (a.k.a -rst- and 'Raspberry Compote')
  *
  * Licensed under the Creative Commons Attribution 3.0 Unported License
@@ -42,7 +54,7 @@ int read_ppm(char *fpath, struct fb_image *image) {
 
 	int errval = 0;
 	FILE* fp = 0;
-    int bytes_per_pixel = 2;
+    int bytes_per_pixel = 2; // 16 bit
 
     fp = fopen(fpath, "r");
     if (fp == 0) {
@@ -122,6 +134,7 @@ int read_ppm(char *fpath, struct fb_image *image) {
                         unsigned char g = rgb[1];
                         unsigned char b = rgb[2];
                         unsigned short rgb565 = ((r >> 3) << 11) + ((g >> 2) << 5) + (b >> 3);
+                        // store pixel in memory
                         unsigned int pix_offset = (y * width + x ) * bytes_per_pixel;
                         *((unsigned short *)(image->data + pix_offset)) = rgb565;
                     }
@@ -150,8 +163,10 @@ void draw(struct fb_image *image) {
 
     for (y = 0; y < image->height; y++) {
         for (x = 0; x < image->width; x++) {
+            // get pixel from image
             unsigned int img_pix_offset = (y * image->width + x) * 2;
             unsigned short c = *(unsigned short *)(image->data + img_pix_offset);
+            // plot pixel to screen
             unsigned int fb_pix_offset = x * 2 + y * finfo.line_length;
             *((unsigned short*)(fbp + fb_pix_offset)) = c;
         }
