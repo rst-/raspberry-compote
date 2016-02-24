@@ -1,8 +1,8 @@
 /*
- * fbtestXIV.c
+ * fbtestXIVb.c
  *
- * compile with 'gcc -O2 -o fbtestXIV fbtestXIV.c'
- * run with './fbtestXIV'
+ * compile with 'gcc -O2 -o fbtestXIVb fbtestXIVb.c'
+ * run with './fbtestXIVb'
  *
  * http://raspberrycompote.blogspot.com/2015/01/low-level-graphics-on-raspberry-pi-part.html
  * http://raspberrycompote.blogspot.com/2015/01/low-level-graphics-on-raspberry-pi-part_27.html
@@ -146,14 +146,11 @@ void draw() {
 
         // switch page
         vinfo.yoffset = cur_page * vinfo.yres;
-        ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
-        // the call to waitforvsync should use a pointer to a variable
-        // https://www.raspberrypi.org/forums/viewtopic.php?f=67&t=19073&p=887711#p885821
-        // so should be in fact like this:
         __u32 dummy = 0;
         ioctl(fbfd, FBIO_WAITFORVSYNC, &dummy);
+        // would expect this order to work but tearing occurs...
+        ioctl(fbfd, FBIOPAN_DISPLAY, &vinfo);
 
-        // also should of course check the return values of the ioctl calls...
     }
 
 }
