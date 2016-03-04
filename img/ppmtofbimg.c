@@ -159,7 +159,6 @@ int read_ppm(char *fpath, struct fb_image *image) {
 void draw(struct fb_image *image) {
     int y;
     int x;
-    unsigned char rgb[3];
 
     for (y = 0; y < image->height; y++) {
         for (x = 0; x < image->width; x++) {
